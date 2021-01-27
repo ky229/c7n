@@ -1,0 +1,6 @@
+{
+  "package": {
+    "initLoad": true,
+    "registerRegex": "\\/hzero-front-wky-demo1\\/"
+  }
+}
