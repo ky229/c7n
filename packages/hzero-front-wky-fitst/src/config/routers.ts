@@ -13,7 +13,13 @@ const routerConfig: RoutersConfig = [
     component: () => import('../pages/hello/DemoPage'),
     authorized: true,
     title: 'Sample Demo1',
-  }
+  },
+  {
+    path: '/wky/fitst',
+    component: () => import('../pages/firstPage/list/FirstPage'),
+    authorized: true,
+    title: 'wky-fitst-page',
+  },
 ];
 
-export default routerConfig ;
+export default routerConfig;
