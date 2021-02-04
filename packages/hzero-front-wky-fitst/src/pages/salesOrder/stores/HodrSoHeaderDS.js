@@ -1,77 +1,101 @@
 export default () => ({
-  autoQuery: true,
-  autoCreate: true,
-  primaryKey: 'soLineId',
+  autoQuery: false,
+  primaryKey: 'soHeaderId',
   fields: [
-    {
-      name: 'soLineId',
-      type: 'number',
-      label: '销售订单行ID',
-    },
     {
       name: 'soHeaderId',
       type: 'number',
       label: '销售订单头ID',
     },
     {
-      name: 'lineNumber',
-      label: '行号',
-      type: 'number',
-    },
-    {
-      name: 'itemId',
-      label: '产品ID',
-      type: 'number',
-    },
-    {
-      name: 'itemName',
-      label: '产品名称',
+      name: 'orderNumber',
+      label: '订单编号',
       type: 'string',
     },
     {
-      name: 'orderQuantity',
-      label: '数量',
+      name: 'companyId',
+      label: '公司ID',
       type: 'number',
     },
     {
-      name: 'orderQuantityUom',
-      label: '产品单位',
+      name: 'companyName',
+      label: '公司名称',
       type: 'string',
     },
     {
-      name: 'unitSellingPrice',
-      label: '销售单价',
+      name: 'customerId',
+      label: '客户ID',
       type: 'number',
     },
     {
-      name: 'description',
-      label: '备注',
+      name: 'customerName',
+      label: '客户名称',
+      type: 'string',
+    },
+    { name: 'orderDate', type: 'date', label: '订单日期' },
+    {
+      name: 'orderStatus',
+      label: '订单状态',
+      type: 'string',
+    },
+    {
+      name: 'orderPrice',
+      label: '订单金额',
+      type: 'number',
+    },
+  ],
+  queryFields: [
+    {
+      name: 'orderNumber',
+      label: '订单编号',
+      type: 'string',
+    },
+    {
+      name: 'orderStatus',
+      label: '订单状态',
+      type: 'string',
+    },
+    {
+      name: 'companyName',
+      label: '公司名称',
+      type: 'string',
+    },
+    {
+      name: 'customerName',
+      label: '客户名称',
       type: 'string',
     },
   ],
   transport: {
     submit: {
-      url: '/soLine/queries',
+      url: '/soHeader/queries',
       method: 'post',
     },
     read: {
-      url: '/soLine/queries',
+      url: '/soHeader/queries',
       method: 'get',
     },
     create: {
-      url: '/soLine/mutations',
+      url: '/soHeader/mutations',
       method: 'put',
     },
     update: ({ data }) =>
       data.length
         ? {
-            url: `/soLine/mutations/${data[0].userId}`,
+            url: `/dataset/user/mutations/${data[0].userId}`,
             data: data[0],
           }
         : null,
     destroy: {
-      url: '/soLine/mutations',
+      url: '/dataset/user/mutations',
       method: 'delete',
     },
+    exports: {
+      url: 'http://gitee.com/xurime/excelize/raw/master/test/SharedStrings.xlsx',
+      method: 'get',
+    },
+  },
+  children: {
+    friends: null,
   },
 });

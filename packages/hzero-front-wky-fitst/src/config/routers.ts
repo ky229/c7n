@@ -20,6 +20,12 @@ const routerConfig: RoutersConfig = [
     authorized: true,
     title: 'wky-fitst-page',
   },
+  {
+    path: '/so/list',
+    component: () => import('../pages/salesOrder/list/HodrSoPage'),
+    authorized: true,
+    title: '订单列表',
+  },
 ];
 
 export default routerConfig;
