@@ -1,8 +1,6 @@
 import React, { Component, Fragment } from 'react';
-import { Header, Content } from 'components/Page';
-import { DataSet, Table, Button, TextField, Lov, Modal, Tabs } from 'choerodon-ui/pro';
-import HodrSoHeaderDS from '../stores/HodrSoHeaderDS';
-import HodrSoLineDS from '../stores/HodrSoLineDS';
+import { Content } from 'components/Page';
+import { DataSet, Table, Button, Modal, Tabs } from 'choerodon-ui/pro';
 import './index.less';
 
 const { TabPane } = Tabs;
@@ -53,6 +51,7 @@ export default class FirstPage extends Component {
         name: 'orderQuantityUom',
         label: '产品单位',
         type: 'string',
+        lookupCode: 'HPFM.UOM',
       },
       {
         name: 'unitSellingPrice',
@@ -155,8 +154,9 @@ export default class FirstPage extends Component {
       },
       {
         name: 'companyId',
-        label: '公司ID',
-        type: 'number',
+        label: '公司',
+        type: 'object',
+        lovCode: 'HPFM.UNIT.COMPANY',
       },
       {
         name: 'companyName',
@@ -165,8 +165,9 @@ export default class FirstPage extends Component {
       },
       {
         name: 'customerId',
-        label: '客户ID',
-        type: 'number',
+        label: '客户',
+        type: 'object',
+        lovCode: 'HPFM.EMPLOYEE',
       },
       {
         name: 'customerName',
@@ -178,6 +179,7 @@ export default class FirstPage extends Component {
         name: 'orderStatus',
         label: '订单状态',
         type: 'string',
+        lookupCode: 'HPFM.TENANT_INIT_STATUS',
       },
       {
         name: 'orderPrice',
@@ -242,29 +244,14 @@ export default class FirstPage extends Component {
   });
 
   componentDidMount() {
-    const lineData = [
-      {
-        soLineId: 1,
-        soHeaderId: 1,
-        lineNumber: '1111',
-        addition1: '1111-1',
-      },
-      {
-        soLineId: 2,
-        soHeaderId: 2,
-        lineNumber: '2222',
-        addition1: '2222-2',
-      },
-    ];
-    this.hodrSoLineDS.loadData(lineData, 2);
     const headerData = [
       {
         soHeaderId: 1,
-        orderNumber: '1111',
+        orderNumber: '20210205000001',
       },
       {
         soHeaderId: 2,
-        orderNumber: '2222',
+        orderNumber: '20210205000002',
       },
     ];
     this.hodrSoHeaderDS.loadData(headerData, 2);
@@ -283,14 +270,26 @@ export default class FirstPage extends Component {
               editMode="inline"
               dataSet={this.hodrSoLineDS}
             >
+              <Column name="soLineId" editor />
+              <Column name="soHeaderId" editor />
               <Column name="lineNumber" editor />
-              <Column header="操作" width={150} command={this.commands} lock="right" />
+              <Column name="itemId" editor />
+              <Column name="itemName" editor />
+              <Column name="orderQuantity" editor />
+              <Column name="orderQuantityUom" editor />
+              <Column name="unitSellingPrice" editor />
+              <Column name="description" editor />
+              <Column header="操作" command={this.commands} lock="right" />
             </Table>
           </TabPane>
           <TabPane tab="行拓展信息">
-            <Table dataSet={this.hodrSoLineDS} rowHeight={40}>
-              <Column name="addition1" editor width={150} />
-              <Column header="操作" width={150} command={this.commands} lock="right" />
+            <Table dataSet={this.hodrSoLineDS}>
+              <Column name="addition1" editor />
+              <Column name="addition2" editor />
+              <Column name="addition3" editor />
+              <Column name="addition4" editor />
+              <Column name="addition5" editor />
+              <Column header="操作" command={this.commands} lock="right" />
             </Table>
           </TabPane>
         </Tabs>
@@ -310,7 +309,9 @@ export default class FirstPage extends Component {
     this.openModal();
   };
 
-  commands = ({ record }) => ['edit', ['delete', { color: 'red' }]];
+  headerCommands = ({ record }) => ['edit', ['delete', { color: 'red' }]];
+
+  lineCommands = ({ record }) => ['edit', ['delete', { color: 'red' }]];
 
   render() {
     return (
@@ -320,17 +321,18 @@ export default class FirstPage extends Component {
             key="user"
             buttons={this.buttons}
             dataSet={this.hodrSoHeaderDS}
-            header="HodrSoHeader"
+            header="订单汇总信息"
             editMode="inline"
           >
             <Column name="soHeaderId" onClick={this.editLine} />
-            <Column name="orderNumber" editor width={150} />
-            <Column
-              header="编辑行信息"
-              align="center"
-              renderer={this.renderEditLine}
-              lock="right"
-            />
+            <Column name="orderNumber" editor />
+            <Column name="companyId" editor />
+            <Column name="customerId" editor />
+            <Column name="orderDate" editor />
+            <Column name="orderStatus" editor />
+            <Column name="orderPrice" editor />
+            <Column header="头编辑" command={this.headerCommands} lock="right" />
+            <Column header="行编辑" align="center" renderer={this.renderEditLine} lock="right" />
           </Table>
         </Content>
       </Fragment>
