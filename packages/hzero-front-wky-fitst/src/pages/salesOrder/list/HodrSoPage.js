@@ -3,6 +3,7 @@ import { Header, Content } from 'components/Page';
 import { DataSet, Table, Button, TextField, Lov, Modal, Tabs } from 'choerodon-ui/pro';
 import HodrSoHeaderDS from '../stores/HodrSoHeaderDS';
 import HodrSoLineDS from '../stores/HodrSoLineDS';
+import './index.less';
 
 const { TabPane } = Tabs;
 const { Column } = Table;
@@ -12,7 +13,6 @@ export default class FirstPage extends Component {
     super(props);
     this.state = {};
   }
-
 
   hodrSoLineDS = new DataSet({
     autoQuery: false,
@@ -128,9 +128,9 @@ export default class FirstPage extends Component {
       update: ({ data }) =>
         data.length
           ? {
-            url: `/soLine/mutations/${data[0].userId}`,
-            data: data[0],
-          }
+              url: `/soLine/mutations/${data[0].userId}`,
+              data: data[0],
+            }
           : null,
       destroy: {
         url: '/soLine/mutations',
@@ -223,9 +223,9 @@ export default class FirstPage extends Component {
       update: ({ data }) =>
         data.length
           ? {
-            url: `/dataset/user/mutations/${data[0].userId}`,
-            data: data[0],
-          }
+              url: `/dataset/user/mutations/${data[0].userId}`,
+              data: data[0],
+            }
           : null,
       destroy: {
         url: '/dataset/user/mutations',
@@ -240,7 +240,6 @@ export default class FirstPage extends Component {
       hodrSoLins: this.hodrSoLineDS,
     },
   });
-
 
   componentDidMount() {
     const lineData = [
@@ -275,43 +274,42 @@ export default class FirstPage extends Component {
     let isCancel = false;
     Modal.open({
       drawer: true,
-      width: 600,
+      width: 1200,
       children: (
         <Tabs>
-          <TabPane tab="行基本信息">
-            <Table buttons={['add', 'delete']} dataSet={this.hodrSoLineDS} rowHeight={40}>
+          <TabPane tab="行基本信息" size="large">
+            <Table
+              buttons={['add', 'save', 'delete']}
+              editMode="inline"
+              dataSet={this.hodrSoLineDS}
+            >
               <Column name="lineNumber" editor />
+              <Column header="操作" width={150} command={this.commands} lock="right" />
             </Table>
           </TabPane>
           <TabPane tab="行拓展信息">
             <Table dataSet={this.hodrSoLineDS} rowHeight={40}>
               <Column name="addition1" editor width={150} />
+              <Column header="操作" width={150} command={this.commands} lock="right" />
             </Table>
           </TabPane>
         </Tabs>
       ),
       onCancel: () => (isCancel = true),
-      afterClose: () => record && isCancel && this.userDs.remove(record),
+      afterClose: () => record && isCancel && this.hodrSoLineDS.remove(record),
     });
   };
 
-  buttons = ['add', 'delete'];
+  buttons = ['add', 'save', 'delete'];
 
-  renderEdit = () => {
-    return (
-      <Button
-        funcType="flat"
-        icon="mode_edit"
-        onClick={this.editUser}
-        size="small"
-      />
-    );
+  renderEditLine = () => {
+    return <Button funcType="flat" icon="mode_edit" onClick={this.editLine} size="small" />;
   };
 
-
-  editUser = () => {
+  editLine = () => {
     this.openModal();
   };
+
   commands = ({ record }) => ['edit', ['delete', { color: 'red' }]];
 
   render() {
@@ -323,10 +321,16 @@ export default class FirstPage extends Component {
             buttons={this.buttons}
             dataSet={this.hodrSoHeaderDS}
             header="HodrSoHeader"
+            editMode="inline"
           >
-            <Column name="soHeaderId" />
+            <Column name="soHeaderId" onClick={this.editLine} />
             <Column name="orderNumber" editor width={150} />
-            <Column header="编辑行信息" align="center" renderer={this.renderEdit} lock="right" />
+            <Column
+              header="编辑行信息"
+              align="center"
+              renderer={this.renderEditLine}
+              lock="right"
+            />
           </Table>
         </Content>
       </Fragment>
